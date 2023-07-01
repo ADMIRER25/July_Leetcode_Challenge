@@ -1,2 +1,2 @@
 # July_Leetcode_Challenge
-All the potd question's solution I upload here in C++ language
+All the potd question's solution of july month I upload here in C++ language
