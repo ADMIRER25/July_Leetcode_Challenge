@@ -1,0 +1,39 @@
+T.C : O(2^M) M : REQUESTS.SIZE(); N = n
+S.C: O(N+M)
+------------------------------------------------------------------------------------------------------
+class Solution {
+    void helper(vector<vector<int>>& requests,vector<int>total_deg,int req_count,int ind,int &ans)
+    {
+        if(ind == requests.size())
+        {
+            for(int i = 0; i < total_deg.size(); i++) 
+            {
+                if(total_deg[i] != 0) return;
+            }
+                
+            ans = max(ans,req_count);
+            return;
+        }
+
+        // take cuurent request GOING FROM X TO Y
+        int x = requests[ind][0];
+        int y = requests[ind][1];
+        total_deg[x]--;
+        total_deg[y]++;
+        helper(requests,total_deg,req_count+1,ind+1,ans);
+
+        //backtrack and dont take current request 
+        total_deg[x]++;
+        total_deg[y]--;
+        helper(requests,total_deg,req_count,ind+1,ans);
+    }
+public:
+    int maximumRequests(int n, vector<vector<int>>& requests) {
+        vector<int>total_deg(n,0);
+        int req_count = 0;
+        int ans = 0;
+        int ind = 0;
+        helper(requests,total_deg,req_count,ind,ans);
+        return ans;
+    }
+};
