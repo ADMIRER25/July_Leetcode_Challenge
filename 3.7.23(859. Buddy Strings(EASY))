@@ -1,0 +1,28 @@
+class Solution {
+public:
+    bool buddyStrings(string s, string goal) 
+    {
+        if(s.length() != goal.length()) return false;
+
+        int freq1[26] = {0};// for s 
+        int freq2[26] = {0};//for goal 
+        
+        int swap = 0;
+        for(int i = 0; i < s.length();i++)
+        {
+            freq1[s[i]- 'a']++;
+            freq2[goal[i]- 'a']++;
+
+            if(s[i] != goal[i]) swap++;
+            if(swap > 2) return false;
+        }
+        bool flag = false;
+        for(int i = 0; i < 26; i++)
+        {
+            if(freq1[i] != freq2[i]) return false;
+            if(freq1[i] > 1) flag = true;
+        }
+        if(!flag && s == goal) return false;
+        return true;
+    }
+};
