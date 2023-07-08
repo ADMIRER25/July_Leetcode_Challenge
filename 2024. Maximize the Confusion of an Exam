@@ -1,0 +1,35 @@
+class Solution {
+
+    int find_maxlength(string &answerKey,int k,int ch)
+    {
+        int ans = 0;
+        vector<int>index;
+        int ind = 0;
+        int i = 0, j = 0;
+        while(j < answerKey.size())
+        {
+            if(answerKey[j] == ch)
+            {
+                index.push_back(j);
+                k--;
+            }
+            if(k < 0)
+            {
+                ans = max(ans,j-i);
+                i = index[ind++]+1;
+                k++;
+            } 
+            j++;
+        }
+        ans = max(ans,j-i);
+        return ans;
+    }
+public:
+    int maxConsecutiveAnswers(string answerKey, int k) 
+    {
+       // we allow only k flips inside a window
+
+        int ans = max(find_maxlength(answerKey,k,'F'),find_maxlength(answerKey,k,'T'));
+        return ans;
+    }
+};
