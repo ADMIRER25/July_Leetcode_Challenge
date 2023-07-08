@@ -1,0 +1,20 @@
+class Solution {
+public:
+    long long putMarbles(vector<int>& weights, int k) 
+    {
+      vector<int>pair_sum;
+      int n = weights.size();
+      for(int i = 1; i < n; i++) 
+      {
+          pair_sum.push_back(weights[i] + weights[i-1]);
+      } 
+      sort(pair_sum.begin(),pair_sum.end());
+      long long mini = 0, maxi = 0;
+      for(int i = 0; i < k-1; i++)
+      {
+          mini += pair_sum[i]; // samne theke k ta nimal 
+          maxi += pair_sum[n-2-i]; // pechon theke k ta nilam
+      }
+      return maxi - mini;
+    }
+};
