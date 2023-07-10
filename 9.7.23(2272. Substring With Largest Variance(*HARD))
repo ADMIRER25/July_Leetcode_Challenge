@@ -1,0 +1,62 @@
+t.C: O(26*26*n)
+SC:O(26)
+------------------------------
+class Solution {
+public:
+    int largestVariance(string s) 
+    {
+      //ok so in one substring we can have one char who have maximum frequency and one char who have minimum freq so we can take every pair of char and then check the ans so eventually er can get ans 
+
+      //if we will take every pair , we have to make sure that every pair is present in the s or not so take a container and then store every char of s with its freq
+
+      vector<int>alpha(26,0);
+      for(char &ch: s) alpha[ch-'a']++;
+
+      int ans = 0;
+      for(char major = 'a'; major <= 'z'; major++) 
+      {
+          for(char minor = 'a'; minor <= 'z';minor++)
+          {
+              //if i == j then their freq always will be same which will give me ans 0 ehich is not a better ans so no need to take if i == j
+
+              //if i or j is absent in the s then take another pair 
+
+              if(major == minor || alpha[major-'a'] == 0 || alpha[minor-'a'] == 0) continue;
+
+              //major count will take the count of major here we have i as a major and restminor will take care of the number of minor in rest window so that in every window we have atleast a minor
+
+              //the main aim is to increase the count of major and decrease the count of minor 
+              int majorcount = 0, minorcount = 0,restminor = alpha[minor-'a'];
+
+              //now go on the s
+              for(char &ch : s)
+              {
+                  if(ch == major) majorcount++;
+
+                  if(ch == minor)
+                  {
+                      minorcount++;
+                      restminor--;
+                  }
+
+                  //minorcount is greater than major count then if we don't discard it minor will increase and eventually we can not get a optimal result like in 
+                  a b a b // if b: major and a : minor then if we take the 1st a then out major count : 0, minorcount: 1 , so majorcount- minorcount = -1 , then eventually we get ans 0 but if we discard first a then we get a ans which is 1, so better to discard it BY doing majorcount = minorcount = 0
+
+                  //we have to check restminor bcz if in the right we are not able to get any minor then we are not able to get a valid substring bcz every string needs a major and minor so if there is no minor left in the right then we have to take at least one minor to make the substring valid like a b b major:b minor a;
+
+                  if(majorcount < minorcount && restminor > 0)
+                  {
+                      majorcount = 0;
+                      minorcount = 0;
+                  }
+
+                  if(minorcount > 0) // i.e we have at least one minor inside our window
+                  {
+                      ans = max(ans,majorcount-minorcount);
+                  }
+              }
+          }
+      }
+      return ans;
+    }
+};
