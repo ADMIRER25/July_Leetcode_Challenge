@@ -1,0 +1,88 @@
+/*to keep track of the of the LRU we have to use a DLL and to overcome the interation for finding the key value pair we use hashmap and DLL(so that we can delete the LRU node)*/
+class LRUCache {
+    class Node{
+        public:
+            int key,val;
+            Node *prev,*next;
+            Node(int key,int val)
+            {
+                this->key = key;
+                this->val = val;
+            }
+    };
+    int cap;
+    Node *head = new Node(-1,-1);
+    Node *tail = new Node(-1,-1);
+    //we are taking the Node* to overcome the iteration of finding the required key value pair and we are not storing key and val bcz we have to delete the corresponding key val from the dll also so if we store the Node* then we can directly delete that node without any iteration
+
+    unordered_map<int,Node*>mp;
+    void addNode(Node *node)
+    {
+        node->next = head->next;
+        head ->next ->prev = node;
+        head->next = node;
+        node ->prev = head;
+    }
+    void deleteNode(Node *node)
+    {
+        node->prev ->next = node->next;
+        node->next->prev = node->prev;
+    }
+public:
+    LRUCache(int capacity) 
+    {
+        cap = capacity;
+
+        //head is pointing to tail and tail is pointing to head
+        head -> next = tail;
+        tail ->prev = head;
+    }
+    
+    int get(int key) 
+    {
+        if(mp.find(key) != mp.end())
+        {
+            //then we have recently used that key so we have to update it in the dll
+            int ans = mp[key]->val;
+
+            Node *temp = mp[key];
+            //operation in map 
+            deleteNode(temp);
+            addNode(temp);
+
+            //opration in map
+            mp[key] = head->next;
+
+            return ans;
+        }
+        return -1;
+    }
+    
+    void put(int key, int value)
+    {
+       Node *node = new Node(key,value);
+       if(mp.find(key) != mp.end()) //just update the val 
+       {
+          Node *temp = mp[key] ;
+
+          mp.erase(key);
+          deleteNode(temp);
+
+       }
+       if(mp.size() == cap)
+       {
+           mp.erase(tail->prev->key);
+           deleteNode(tail->prev);
+       }
+        //add that new node into dll and map
+        addNode(node);
+        mp[key] = node;
+    }
+};
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache* obj = new LRUCache(capacity);
+ * int param_1 = obj->get(key);
+ * obj->put(key,value);
+ */
