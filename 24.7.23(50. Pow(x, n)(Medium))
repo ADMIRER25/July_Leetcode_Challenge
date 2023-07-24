@@ -1,0 +1,42 @@
+class Solution {
+public:
+    double myPow(double x, int n) 
+    {
+       long nn = n;
+       if(n < 0) nn = -1*nn;
+
+       double val = 1;
+       while(nn > 0)
+       {
+           if(nn % 2 == 0)
+           {
+               x *= x;
+               nn /= 2;
+           }
+           else 
+           {
+               val = val * x;
+               nn -= 1;
+           }
+       }
+       return (n < 0)? 1/val: val;
+    }
+};
+--------------------------------------------------
+class Solution {
+    double solve(double x,long n)
+    {
+        if(n == 0) return 1;
+        if(n % 2 == 0) return solve(x*x,n/2);
+        else return x*solve(x,n-1);
+    }
+public:
+    double myPow(double x, int n) 
+    {
+       long nn = n;
+       if(n < 0) nn = -1*nn;
+
+       double val = solve(x,nn);
+       return (n < 0)? 1/val: val;
+    }
+};
